@@ -3,28 +3,36 @@ Date: Saturday, January 27 2024
 Description: recieves the generated text and converts it to speech
 '''
 import azure.cognitiveservices.speech as speechsdk
-from pydub.playback import play
-from pydub import AudioSegment
+# from pydub.playback import play
+# from pydub import AudioSegment
 import os
 from flask import Flask, request, send_file#NEW
 from flask_cors import CORS
 
 app = Flask(__name__)#NEW
 
-class tts_api:
-    #The subscription key and service region needed to access the service
-    subscription_key = 'e370f7cc63b042f2a1dd21387391bc2d'
-    service_region = 'https://eastus.api.cognitive.microsoft.com/'
+# class tts_api:
+#     #The subscription key and service region needed to access the service
+#     subscription_key = 'e370f7cc63b042f2a1dd21387391bc2d'
+#     service_region = 'https://eastus.api.cognitive.microsoft.com/'
 
-    #creates access to the service
-    def __init__(self):
-        self.speech_config = speechsdk.SpeechConfig(subscription=self.subscription_key,region=self.service_region)
+#     #creates access to the service
+#     def __init__(self):
+#         self.speech_config = speechsdk.SpeechConfig(subscription=self.subscription_key,region=self.service_region)
+
+@app.route('/')
+def main_page():
+    return 
 
 @app.route('/convert', methods=['POST'])#NEW
 def convert_to_speech():
+    subscription_key = 'e370f7cc63b042f2a1dd21387391bc2d'
+    service_region = 'https://eastus.api.cognitive.microsoft.com/'
+    speech_config = speechsdk.SpeechConfig(subscription=subscription_key,region=service_region)
+
     text = request.form['text']
-    tts_service = tts_api()
-    audio_file = tts_service.convert_to_speech(text)
+    # tts_service = tts_api()
+    audio_file = speech_config.convert_to_speech(text)
 
     if audio_file:
         return send_file(audio_file, as_attachment=True)
@@ -83,7 +91,7 @@ def convert_to_speech():
 #NEW    
 if __name__ == '__main__':
     app.run(debug=True)   
-CORS(app)
+# CORS(app)
 
 
 
