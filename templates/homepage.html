@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+
+        <h1>Nostalgic Reminders</h1>
+        <p></p>
+        <form action="/change/" method="post">
+            <button name="click_btn" type="submit">Change</button>
+        </form>
+        {% if forward_message %}
+        <h1>Hello {{ forward_message }}!</h1>
+        {% endif %}
+
+    </body>
+</html>
