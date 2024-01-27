@@ -96,12 +96,16 @@ class Backend():
         tag = description_dict["tags"]
         caption = description_dict["caption"]
         tag = description_dict["tags"]
+
         # Creates a pictures object and stores it in pictures array
         created_picture = Pictures(url, label=len(self.pictures))
         self.pictures.append(created_picture)
-        # TODO
+
         # Call CohereG.,Generate here first time image is uploaded
-        chatbot.generate(tag)
+        image_tags = ' '.join(tag for tag in description_dict['description']['tags'])
+        image_text = ' '.join(text for text in description_dict['description']['text'])
+        image_descriptions = image_tags + " " + image_text
+        chatbot.generate(image_descriptions)
         return True
 
     def execute_chatbot_input(self, input):

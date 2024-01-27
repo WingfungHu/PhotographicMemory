@@ -9,7 +9,7 @@ import cohere
 co = cohere.Client('DGY7oZgN4dK8PExNW8BKfO6yNC3mKscV22D17OlZ')
 
 
-def generate(self, image_description: str) -> dict:
+def generate(image_description: str) -> dict:
     generate_prompt = ("Using the description provided, craft one question following an empahthizing comment to "
                        "help draw out the nostalgic memories associated with this image. These questions are "
                        "designed to be conversational and non-intrusive, intending to encourage the individual to "
