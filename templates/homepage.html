@@ -49,16 +49,15 @@
         #image-display-container {
             max-height: 300px; /* Adjust the maximum height as needed */
             overflow: hidden; /* Hide overflow if the image exceeds the maximum height */
-            object-fit: contain;
         }
 
         #image-display {
             display: block;
             margin-left: auto;
-            margin-right: auto; 
+            margin-right: auto;
             width: 50%;
             height: 50%;
-            
+            object-fit: contain;
         }
 
         #submit-btn {
@@ -79,6 +78,7 @@
         #chat-messages {
             max-height: 200px;
             overflow-y: auto;
+            padding-bottom: 20px; /* Add some padding to allow space for scrollbar */
         }
 
         .message {
@@ -111,7 +111,7 @@
     <div id="container">
         <div id="image-url-container">
             <label for="image-url" id="image-url-label">Image URL:</label>
-            <input type="text" id="image-url" name="image-url">
+            <input type="text" id="image-url" name="image-url" placeholder="Enter URL here..." onkeydown="handleEnterInput(event)">
         </div>
         <button id="submit-btn" onclick="submitImage()">Submit</button>
         <div id="horizontal-line"></div>
@@ -128,13 +128,21 @@
 
         <div id="chat-container">
             <label for="user-input" id="memory-chat-label">MemoryChat:</label>
-            <input type="text" id="user-input" placeholder="Type a message..." onkeydown="handleChatInput(event)">
             <div id="chat-messages"></div>
+            <input type="text" id="user-input" placeholder="Type a message..." onkeydown="handleChatInput(event)">
         </div>
     </div>
 
     <script>
         var imageUrls = [];
+        var chatMessagesContainer = document.getElementById('chat-messages');
+
+        function handleEnterInput(event) {
+            if (event.key === 'Enter') {
+                submitImage();
+                event.preventDefault();
+            }
+        }
 
         function submitImage() {
             var imageUrl = document.getElementById('image-url').value;
@@ -156,11 +164,9 @@
                 contentType: 'application/json', 
                 data: JSON.stringify({ 'imageUrl': imageUrl }), 
                 success: function(response) { 
-                    // document.getElementById('output').innerHTML = response.result; 
-                    // chatMessages.innerHTML += '<div>Bot: ' + response + '</div>';
                     console.log("Finish Uploading picture")
-                    chatMessages.innerHTML += '<div class="message">Bot: ' + response + '</div>';
-
+                    chatMessagesContainer.innerHTML += '<div class="message">Bot: ' + response + '</div>';
+                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to the bottom
                 }, 
                 error: function(error) { 
                     console.log(error); 
@@ -170,27 +176,14 @@
 
         function sendMessage() {
             var userInput = document.getElementById('user-input').value;
-            var chatMessages = document.getElementById('chat-messages');
             
             // Display user message
-            chatMessages.innerHTML += '<div class="message">User: ' + userInput + '</div>';
+            chatMessagesContainer.innerHTML += '<div class="message">User: ' + userInput + '</div>';
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to the bottom
             document.getElementById('user-input').value = "";
 
             // Add your chatbot logic here
-            // You can use AJAX to send the user's message to a server and get the bot's response
-            $.ajax({ 
-                url: '/process_user_input_to_chatbot', 
-                type: 'POST', 
-                contentType: 'application/json', 
-                data: JSON.stringify({ 'userInput': userInput }), 
-                success: function(response) { 
-                    // document.getElementById('output').innerHTML = response.result; 
-                    chatMessages.innerHTML += '<div class="message">Bot: ' + response + '</div>';
-                }, 
-                error: function(error) { 
-                    console.log(error); 
-                } 
-            }); 
+            // You can use
         }
 
         function handleChatInput(event) {
