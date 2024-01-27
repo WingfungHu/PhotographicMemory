@@ -174,33 +174,65 @@
 
         function submitImage() {
             var imageUrl = document.getElementById('image-url').value;
+            var imageFile = document.getElementById('image-upload');
             var imageDisplay = document.getElementById('image-display');
             var chatMessages = document.getElementById('chat-messages');
 
-            // Display the image
-            imageDisplay.src = imageUrl;
+            if (imageFile.files.length == 0){
+                // This means there is NO file submission, so we check if url exist
+                if (imageUrl != "") {
+                    // Display the image
+                    imageDisplay.src = imageUrl;
 
-            // Add the image URL to the array
-            imageUrls.push(imageUrl);
+                    // Add the image URL to the array
+                    imageUrls.push(imageUrl);
 
-            // Update the gallery
-            updateGallery();
-            document.getElementById('image-url').value = "";
+                    // Update the gallery
+                    updateGallery();
+                    document.getElementById('image-url').value = "";
 
-            $.ajax({
-                url: '/upload_image',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ 'imageUrl': imageUrl }),
-                success: function(response) {
-                    console.log("Finish Uploading picture")
-                    chatMessagesContainer.innerHTML += '<div class="message">Bot: ' + response + '</div>';
-                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to the bottom
-                },
-                error: function(error) {
-                    console.log(error);
+                    $.ajax({
+                        url: '/upload_image',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ 'imageUrl': imageUrl }),
+                        success: function(response) {
+                            console.log("Finish Uploading picture")
+                            chatMessagesContainer.innerHTML += '<div class="message">Bot: ' + response + '</div>';
+                            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to the bottom
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                } else {
+                    console.log("There is nothing ")
                 }
-            });
+            } else {
+                // File is uploaded, so we process file instead. 
+                // Display the image
+                console.log("file upload")
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    imageDisplay.src = e.target.result;
+                };
+                console.log("file upload 2")
+                reader.readAsDataURL(imageFile);
+
+                // if (imageFile[0]) {
+                //     console.log("file upload 2")
+                //     reader.readAsDataURL(file);
+                // }
+                // imageDisplay.src = imageFile[0]
+
+                // Add the image URL to the array
+                imageUrls.push(imageFile.value);
+
+                // Update the gallery
+                updateGallery();
+                document.getElementById('image-url').value = "";
+            }
         }
 
         function sendMessage() {

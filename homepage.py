@@ -24,6 +24,10 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GETgit', 'POST'])
 def home():
+    app.logger.debug('A value for debugging')
+    global backend_object
+    backend_object = Backend()
+    app.logger.debug(backend_object.print_current_state())
     if request.method == 'POST':
         if 'image-upload' in request.files:
             file = request.files['image-upload']
@@ -40,16 +44,16 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
-@app.route("/")
-def start():
-    # global counter
-    app.logger.debug('A value for debugging')
-    global backend_object
-    backend_object = Backend()
-    app.logger.debug(backend_object.print_current_state())
-    # counter = 0
-    # print(counter)
-    return render_template('homepage.html')
+# @app.route("/")
+# def start():
+#     # global counter
+#     app.logger.debug('A value for debugging')
+#     global backend_object
+#     backend_object = Backend()
+#     app.logger.debug(backend_object.print_current_state())
+#     # counter = 0
+#     # print(counter)
+#     return render_template('homepage.html')
 
 
 @app.route("/upload_image", methods=['GET', 'POST'])
