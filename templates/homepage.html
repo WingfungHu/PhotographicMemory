@@ -6,11 +6,16 @@
 
         <h1>Nostalgic Reminders</h1>
         <p></p>
-        <form action="/change/" method="post">
+        <form action="/" method="post">
+            <input name="input_image_url">
             <button name="click_btn" type="submit">Change</button>
         </form>
         {% if forward_message %}
         <h1>Hello {{ forward_message }}!</h1>
+        {% endif %}
+
+        {% if display_input %}
+        <h1>ENTERED TEXT: {{ display_input }}!</h1>
         {% endif %}
 
     </body>

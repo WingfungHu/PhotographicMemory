@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -14,12 +13,14 @@ def start():
     print(counter)
     return render_template('homepage.html')
 
-@app.route("/change/", methods=['POST'])
+@app.route("/", methods=['POST'])
 def move_forward():
     global counter
     print(counter)
     counter += 1
+    text = request.form['input_image_url']
+
     if counter % 2 == 0:   
-        return render_template('homepage.html')
+        return render_template('homepage.html', display_input=text)
     else: 
-        return render_template('homepage.html', forward_message="forward_message")
+        return render_template('homepage.html', forward_message="forward_message", display_input=text)
