@@ -4,7 +4,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Chatbot</title>
+    <title>Photographic Memories</title>
     <style>
         body {
             display: flex;
@@ -16,16 +16,31 @@
             font-family: Arial, sans-serif;
         }
 
+        #title-container {
+            width: 100%;
+            background-color: #adc0c8; /* Adjust the background color */
+            color: white; /* Adjust the text color */
+            text-align: center;
+            padding: 20px 0px; /* Adjust the padding as needed */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 100px;
+        }
+
+        #title {
+            margin: 0;
+        }
+
         #container {
-            max-height: 80vh; /* Adjust as needed */
+            max-height: calc(100vh - 100px); /* Adjust as needed */
             overflow-y: auto;
+            width: 500px;
         }
 
         #image-url-container,
         #image-display-container,
         #gallery-container,
         #chat-container {
-            width: 500px;
+            width: 90%;
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 20px;
@@ -108,6 +123,10 @@
     </style>
 </head>
 <body>
+    <div id="title-container">
+        <h1 id="title">Photographic Memories</h1>
+    </div>
+
     <div id="container">
         <div id="image-url-container">
             <label for="image-url" id="image-url-label">Image URL:</label>
