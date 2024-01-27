@@ -1,28 +1,118 @@
 <!DOCTYPE html>
-<html>
-    <head>
-    </head>
-    <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Chatbot</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
 
-        <h1>Nostalgic Reminders</h1>
-        <p></p>
-        <form action="/upload_image" method="post">
-            <input name="input_image_url" placeholder="Enter URL here...">
-            <button name="click_btn" type="submit">Change</button>
-        </form>
+        #image-url-container,
+        #image-display-container,
+        #chat-container {
+            width: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-        {% if display_input %}
-        <h1>ENTERED TEXT: {{ display_input }}!</h1>
-        {% endif %}
+        #image-url-label,
+        #memory-chat-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
 
-        <p></p>
-        <form action="/send_text" method="post">
-            <input name="input_text" placeholder="Chat here...">
-        </form>
+        #image-url,
+        #image-display,
+        #user-input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 10px;
+        }
 
-        {% if display_text %}
-        <h1>{{ display_text }}<br></h1>
-        {% endif %}
+        #image-display {
+            max-width: 150px;
+            max-height: 150px;
+            width: auto;
+            height: auto;
+        }
 
-    </body>
+        #submit-btn {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        #horizontal-line {
+            width: 100%;
+            border-top: 1px solid #ccc;
+            margin: 20px 0;
+        }
+
+        #chat-messages {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="image-url-container">
+        <label for="image-url" id="image-url-label">Image URL:</label>
+        <input type="text" id="image-url" name="image-url">
+    </div>
+    <button id="submit-btn" onclick="submitImage()">Submit</button>
+    <div id="horizontal-line"></div>
+
+    <div id="image-display-container">
+        <img id="image-display" src="" alt="Image from URL">
+    </div>
+    <div id="horizontal-line"></div>
+
+    <div id="chat-container">
+        <label for="user-input" id="memory-chat-label">MemoryChat:</label>
+        <input type="text" id="user-input" placeholder="Type a message..." onkeydown="handleChatInput(event)">
+        <div id="chat-messages"></div>
+    </div>
+
+    <script>
+        function submitImage() {
+            var imageUrl = document.getElementById('image-url').value;
+            var imageDisplay = document.getElementById('image-display');
+
+            // Display the image
+            imageDisplay.src = imageUrl;
+        }
+
+        function sendMessage() {
+            var userInput = document.getElementById('user-input').value;
+            var chatMessages = document.getElementById('chat-messages');
+
+            // Display user message
+            chatMessages.innerHTML += '<div>User: ' + userInput + '</div>';
+
+            // Add your chatbot logic here
+            // You can use AJAX to send the user's message to a server and get the bot's response
+        }
+
+        function handleChatInput(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+                // Prevent the default behavior of the Enter key (e.g., adding a newline)
+                event.preventDefault();
+            }
+        }
+    </script>
+</body>
 </html>
