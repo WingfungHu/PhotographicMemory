@@ -31,7 +31,7 @@ def generate(image_description: str) -> dict:
 def chat(conversation: list) -> dict:
     chat_prompt = 'Continue the conversation naturally connecting from the chat_history'
 
-    chat = co.chat(
+    chatting = co.chat(
         model='command',
         message=chat_prompt,
         temperature=0.3,
@@ -40,4 +40,4 @@ def chat(conversation: list) -> dict:
         documents=[]
     )
 
-    return {"role": "Chatbot", "message": chat.text}
+    return {"role": "Chatbot", "message": chatting.text}
