@@ -19,7 +19,7 @@ class Chatbot():
         generate_prompt = "Using the description provided, craft one question following an empahthizing comment to help draw out the nostalgic memories associated with this image. These questions are designed to be conversational and non-intrusive, intending to encourage the individual to reflect and share at their own pace, so refer to the past. Do not be too open ended or add explanations of why you generated that text. Description for photo: "
         chat_prompt = 'Continue the conversation naturally connecting from the chat_history'
 
-    def generate(self, generate_prompt: str, image_description: str, conversation: list) -> dict:
+    def generate(self, generate_prompt: str, image_description: str) -> dict:
 
         response = co.generate(
             model='command',
