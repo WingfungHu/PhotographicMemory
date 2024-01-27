@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text to Speech</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <form id="ttsForm">
+        <input type="text" name="text" id="textInput" placeholder="Enter text">
+        <input type="submit" value="Convert to Speech">
+    </form>
+    <audio id="audioPlayer" controls hidden></audio>
+
+    <script>
+        $(document).ready(function() {
+            $('#ttsForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/convert',
+                    type: 'POST',
+                    data: { text: $('#textInput').val() },
+                    success: function(response) {
+                        var audioPlayer = document.getElementById('audioPlayer');
+                        audioPlayer.src = URL.createObjectURL(response);
+                        audioPlayer.hidden = false;
+                        audioPlayer.play();
+                    },
+                    error: function() {
+                        alert('Error converting text to speech.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
