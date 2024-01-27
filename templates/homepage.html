@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photographic Memories</title>
@@ -122,7 +122,7 @@
             height: 100%;
             object-fit: cover; /* Adjust the object-fit as needed */
         }
-        
+
     </style>
 </head>
 <body>
@@ -136,6 +136,12 @@
             <input type="text" id="image-url" name="image-url" placeholder="Enter URL here..." onkeydown="handleEnterInput(event)">
         </div>
         <button id="submit-btn" onclick="submitImage()">Submit</button>
+
+        <div id="image-upload-container">
+            <label for="image-upload" id="image-upload-label">Upload Image:</label>
+            <input type="file" id="image-upload" name="image-upload" accept="image/*" onchange="previewImage()">
+        </div>
+
         <div id="horizontal-line"></div>
 
         <div id="image-display-container">
@@ -180,28 +186,28 @@
             // Update the gallery
             updateGallery();
             document.getElementById('image-url').value = "";
-            
-            $.ajax({ 
-                url: '/upload_image', 
-                type: 'POST', 
-                contentType: 'application/json', 
-                data: JSON.stringify({ 'imageUrl': imageUrl }), 
-                success: function(response) { 
+
+            $.ajax({
+                url: '/upload_image',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'imageUrl': imageUrl }),
+                success: function(response) {
                     console.log("Finish Uploading picture")
                     chatMessagesContainer.innerHTML += '<div class="message">Bot: ' + response + '</div>';
                     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to the bottom
-                }, 
-                error: function(error) { 
-                    console.log(error); 
-                } 
-            }); 
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
         }
 
         function sendMessage() {
             var userInput = document.getElementById('user-input').value;
             var chatMessages = document.getElementById('chat-messages');
 
-            
+
             // Display user message
             chatMessagesContainer.innerHTML += '<div class="message">User: ' + userInput + '</div>';
             chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to the bottom
@@ -209,20 +215,20 @@
 
             // Add your chatbot logic here
             // You can use
-            $.ajax({ 
-                url: '/process_user_input_to_chatbot', 
-                type: 'POST', 
-                contentType: 'application/json', 
-                data: JSON.stringify({ 'userInput': userInput }), 
-                success: function(response) { 
-                    // document.getElementById('output').innerHTML = response.result; 
+            $.ajax({
+                url: '/process_user_input_to_chatbot',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'userInput': userInput }),
+                success: function(response) {
+                    // document.getElementById('output').innerHTML = response.result;
                     chatMessages.innerHTML += '<div class="message">Bot: ' + response + '</div>';
                     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to the bottom
-                }, 
-                error: function(error) { 
-                    console.log(error); 
-                } 
-            }); 
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
         }
 
         function handleChatInput(event) {
