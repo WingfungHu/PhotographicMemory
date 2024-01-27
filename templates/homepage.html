@@ -7,12 +7,21 @@
         <h1>Nostalgic Reminders</h1>
         <p></p>
         <form action="/upload_image" method="post">
-            <input name="input_image_url">
+            <input name="input_image_url" placeholder="Enter URL here...">
             <button name="click_btn" type="submit">Change</button>
         </form>
 
         {% if display_input %}
         <h1>ENTERED TEXT: {{ display_input }}!</h1>
+        {% endif %}
+
+        <p></p>
+        <form action="/send_text" method="post">
+            <input name="input_text" placeholder="Chat here...">
+        </form>
+
+        {% if display_text %}
+        <h1>{{ display_text }}<br></h1>
         {% endif %}
 
     </body>

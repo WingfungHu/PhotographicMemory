@@ -7,6 +7,7 @@ global backend_object
 # global coutner
 # counter = 0
 image_storage = []
+text_storage = []
 
 @app.route("/")
 def start():
@@ -25,6 +26,7 @@ def move_forward():
         input_url = request.form['input_image_url']
         image_storage.append(input_url)
         session['display_input'] = image_storage
+        session['updated'] = 'display_input'
         return redirect(url_for('display'))
     return render_template('homepage.html')
 
@@ -34,5 +36,20 @@ def move_forward():
 @app.route("/display")
 def display():
     display_input = session.get('display_input', None)
-    session.pop('display_input', None)
-    return render_template('homepage.html', display_input=', '.join(display_input) if display_input else None)
+    display_text = session.get('display_text', None)
+    updated = session.pop('updated', None)
+    if updated == 'display_input':
+        session.pop('display_input', None)
+    else:
+        session.pop('display_text', None)
+    return render_template('homepage.html', display_input=', '.join(display_input) if display_input else None, display_text=display_text if display_text else None)
+
+@app.route("/send_text", methods=['GET', 'POST'])
+def send_text():
+    if request.method == 'POST':
+        input_text = request.form['input_text']
+        text_storage.append(input_text)
+        session['display_text'] = text_storage
+        session['updated'] = 'display_text'
+        return redirect(url_for('display'))
+    return render_template('homepage.html')
