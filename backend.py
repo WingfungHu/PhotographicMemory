@@ -1,6 +1,5 @@
 from cohere_api import Chatbot
 from Image_API import Image_API
-# TODO uncomment this:  Commenting it out now because its not a class or a function so whenever we start up the website it makes an API call
 # import Image_API
 # from flask import app
 
