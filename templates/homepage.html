@@ -194,6 +194,7 @@
                 success: function(response) { 
                     // document.getElementById('output').innerHTML = response.result; 
                     chatMessages.innerHTML += '<div class="message">Bot: ' + response + '</div>';
+                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to the bottom
                 }, 
                 error: function(error) { 
                     console.log(error); 
