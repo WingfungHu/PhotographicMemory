@@ -253,6 +253,21 @@
                 gallery.appendChild(galleryItem);
             });
         }
+
+        function previewImage() {
+        var input = document.getElementById('image-upload');
+        var imageDisplay = document.getElementById('image-display');
+        var file = input.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            imageDisplay.src = e.target.result;
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
     </script>
 </body>
 </html>
