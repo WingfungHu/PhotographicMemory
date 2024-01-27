@@ -1,7 +1,7 @@
 import datetime as dt
 import sys
 
-from cohere_api import Chatbot
+import cohere_api as chatbot
 from Image_API import Image_API
 # TODO uncomment this:  Commenting it out now because its not a class or a function so whenever we start up the website it makes an API call
 # import Image_API
@@ -38,31 +38,31 @@ class Pictures():
         str_return += "caption: " + self.caption + " \n"
         # str_return += "added_date: " + self.added_date + " \n"
         return str_return
-            
-    
+
+
 
 class Backend():
     # List to store all the pictures uploaded
     pictures = []
     # List to store the chat history
     chat_history = []
-    
+
     def __init__(self):
         # TODO
         # I might need to initiate API calls here just to make sure they are working and functional
         self.image_api = Image_API()
         return
-    
+
     def print_current_state(self):
         state = {
             "pictures": self.pictures,
             "history": self.chat_history
         }
         return state
-    
+
     def get_all_pictures(self):
         return self.pictures
-    
+
     def get_single_picture(self, idx):
         return self.pictures[idx]
 
@@ -73,7 +73,7 @@ class Backend():
             if i in picture_ids:
                 list_to_return.append(self.pictures[i])
         return list_to_return
-    
+
     def remove_single_picture(self, idx=None, url=None):
         # Given an index or url of picture, remove that picture from the set
         if idx is not None and url is None:
@@ -86,9 +86,9 @@ class Backend():
                     break
             if idx_to_remove != -1:
                 self.pictures.pop(idx_to_remove)
-    
+
     def upload_picture(self, url):
-        
+
         # Make API call to obtain tags and captions
         description_dict = self.image_api.get_image_description(url)
         print("Dictionary Dict: " )
@@ -101,26 +101,19 @@ class Backend():
         self.pictures.append(created_picture)
         # TODO
         # Call CohereG.,Generate here first time image is uploaded
+        chatbot.generate(tag)
         return True
-    
+
     def execute_chatbot_input(self, input):
         # First store the user input
         user_input = ("User", input)
-        self.chat_history.append(user_input)
+        self.chat_history.append({"role": "User", "message": user_input})
 
-        # TODO
-        # Then make API Call to Cohere for Chat
-        # 
-        response = "PlaceholderValueForChatbotResponse"
+        # API Call to Cohere for Chat
+        response = chatbot.chat(self.chat_history)
 
         # Next, store the chatbot's response
-        chatbot_response = ("Bot", response)
-        self.chat_history.append(chatbot_response)
+        self.chat_history.append({"role": "Chatbot", "message": response})
 
         # Finally return chatbot response
-        return chatbot_response
-    
-    
-
-    
-    
+        return response
