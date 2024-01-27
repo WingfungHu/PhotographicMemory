@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Chatbot</title>
@@ -65,6 +66,12 @@
             max-height: 200px;
             overflow-y: auto;
         }
+
+        .message {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        
     </style>
 </head>
 <body>
@@ -90,20 +97,51 @@
         function submitImage() {
             var imageUrl = document.getElementById('image-url').value;
             var imageDisplay = document.getElementById('image-display');
+            var chatMessages = document.getElementById('chat-messages');
 
             // Display the image
             imageDisplay.src = imageUrl;
+            $.ajax({ 
+                url: '/upload_image', 
+                type: 'POST', 
+                contentType: 'application/json', 
+                data: JSON.stringify({ 'imageUrl': imageUrl }), 
+                success: function(response) { 
+                    // document.getElementById('output').innerHTML = response.result; 
+                    // chatMessages.innerHTML += '<div>Bot: ' + response + '</div>';
+                    console.log("Finish Uploading picture")
+                    chatMessages.innerHTML += '<div class="message">Bot: ' + response + '</div>';
+
+                }, 
+                error: function(error) { 
+                    console.log(error); 
+                } 
+            }); 
         }
 
         function sendMessage() {
             var userInput = document.getElementById('user-input').value;
             var chatMessages = document.getElementById('chat-messages');
-
+            
             // Display user message
-            chatMessages.innerHTML += '<div>User: ' + userInput + '</div>';
+            chatMessages.innerHTML += '<div class="message">User: ' + userInput + '</div>';
+            document.getElementById('user-input').value = "";
 
             // Add your chatbot logic here
             // You can use AJAX to send the user's message to a server and get the bot's response
+            $.ajax({ 
+                url: '/process_user_input_to_chatbot', 
+                type: 'POST', 
+                contentType: 'application/json', 
+                data: JSON.stringify({ 'userInput': userInput }), 
+                success: function(response) { 
+                    // document.getElementById('output').innerHTML = response.result; 
+                    chatMessages.innerHTML += '<div class="message">Bot: ' + response + '</div>';
+                }, 
+                error: function(error) { 
+                    console.log(error); 
+                } 
+            }); 
         }
 
         function handleChatInput(event) {

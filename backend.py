@@ -1,10 +1,11 @@
 import datetime as dt
 import sys
 
-import cohere_api as chatbot
+from cohere_api import Chatbot
 from Image_API import Image_API
 # TODO uncomment this:  Commenting it out now because its not a class or a function so whenever we start up the website it makes an API call
 # import Image_API
+# from flask import app
 
 class Pictures():
     def __init__(self, url=None, tags=None, caption=None, label=None):
@@ -51,6 +52,7 @@ class Backend():
         # TODO
         # I might need to initiate API calls here just to make sure they are working and functional
         self.image_api = Image_API()
+        self.chatbot = Chatbot()
         return
 
     def print_current_state(self):
@@ -93,31 +95,46 @@ class Backend():
         description_dict = self.image_api.get_image_description(url)
         print("Dictionary Dict: " )
         print(description_dict)
+
         tag = description_dict["tags"]
-        caption = description_dict["caption"]
-        tag = description_dict["tags"]
+        caption = description_dict["captions"]
+        # tag = description_dict["tags"]
 
         # Creates a pictures object and stores it in pictures array
-        created_picture = Pictures(url, label=len(self.pictures))
+        created_picture = Pictures(url, tag, caption, label=len(self.pictures))
+        print("HASDASDASD==================")
         self.pictures.append(created_picture)
 
         # Call CohereG.,Generate here first time image is uploaded
-        image_tags = ' '.join(tag for tag in description_dict['description']['tags'])
-        image_text = ' '.join(text for text in description_dict['description']['text'])
-        image_descriptions = image_tags + " " + image_text
-        chatbot.generate(image_descriptions)
-        return True
+        image_tags = ', '.join(tag for tag in description_dict['tags'])
+        image_text = ' '.join(text["text"] for text in description_dict['captions'])
+        print("Image Tags:")
+        print(image_tags)
+        print("Image Text:")
+        print(image_text)
+        image_descriptions = image_tags + ": " + image_text
+        print("Image Description")
+        print(image_descriptions)
+        generate_response = self.chatbot.generate(image_descriptions)
+
+        # Add Chatbot Generate Response to chat history
+        self.chat_history.append(generate_response)
+        return generate_response
 
     def execute_chatbot_input(self, input):
         # First store the user input
-        user_input = ("User", input)
+        # user_input = ("User", input)
+        user_input = input["userInput"]
         self.chat_history.append({"role": "User", "message": user_input})
-
+        print(self.chat_history)
         # API Call to Cohere for Chat
-        response = chatbot.chat(self.chat_history)
-
+        response = self.chatbot.chat(self.chat_history)
+        # response = "PLACEHOLDER FOR BOT RESPONSE"
+        print("CHATBOT RESPONSE")
+        print(response)
         # Next, store the chatbot's response
-        self.chat_history.append({"role": "Chatbot", "message": response})
+        self.chat_history.append(response)
+        # self.chat_history.append({"role": "Chatbot", "message": response})
 
         # Finally return chatbot response
-        return response
+        return response["message"]
