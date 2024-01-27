@@ -10,7 +10,7 @@ Desc: This is the code designed with instructions to
 import requests 
         
     
-def get_value(self,url):
+def get_image_decsription(self,url):
     # subscription key is what allows us to access the Azure Computer Vision Serive
     subscription_key = 'b2fce44dfd2b448c915051dcdec5426e'
     assert subscription_key
@@ -28,7 +28,7 @@ def get_value(self,url):
     response = requests.post(base_url, headers=headers, params=params, json=body)
     response.raise_for_status()
     analysis = response.json()
-    return analysis
+    return analysis['description']
 
     #print(analysis['description']['tags']) 
 
