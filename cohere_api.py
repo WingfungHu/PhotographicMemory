@@ -5,6 +5,7 @@ Cohere api
 # !pip install cohere
 
 import cohere
+from cohere.responses.classify import Example
 
 co = cohere.Client('DGY7oZgN4dK8PExNW8BKfO6yNC3mKscV22D17OlZ')
 
@@ -41,3 +42,34 @@ def chat(conversation: list) -> dict:
     )
 
     return {"role": "Chatbot", "message": chatting.text}
+
+def classify(conversation: list) -> str:
+    inputs = []
+
+    examples = [
+        Example("It was sad", "bad"),
+        Example("There were waterslides and all kinds of food to taste!", "good"),
+        Example("It made my day.", "good"),
+        Example("I loved every minute of it;)", "good"),
+        Example("I don't know", "bad"),
+        Example("Very frustrating", "bad"),
+        Example("It was lonely and pretty depressing", "bad"),
+        Example("It was actually not bad, it was okay", "good"),
+        Example("I mean, it was pretty intense", "bad"),
+        Example("It gave me chills!", "good"),
+    ]
+
+    for i in range(len(conversation)):
+        if conversation[i]["role"] == "User":
+            inputs.append(conversation[i]["message"])
+
+    response = co.classify(
+        inputs=inputs,
+        examples=examples,
+    )
+
+    if response.prediction == "good":
+        return ("I hope you enjoyed our memory journey! "
+                "Cherish your memories and come back any time to chat with me about it!")
+    else:
+        return "Let our experiences pave our future, but not pull us down."
