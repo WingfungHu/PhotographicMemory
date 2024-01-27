@@ -137,8 +137,8 @@
         </div>
         <button id="submit-btn" onclick="submitImage()">Submit</button>
 
+        <!-- Upload image part -->
         <div id="image-upload-container">
-            <label for="image-upload" id="image-upload-label">Upload Image:</label>
             <input type="file" id="image-upload" name="image-upload" accept="image/*" onchange="previewImage()">
         </div>
 
@@ -255,18 +255,18 @@
         }
 
         function previewImage() {
-        var input = document.getElementById('image-upload');
-        var imageDisplay = document.getElementById('image-display');
-        var file = input.files[0];
-        var reader = new FileReader();
+            var input = document.getElementById('image-upload');
+            var imageDisplay = document.getElementById('image-display');
+            var file = input.files[0];
+            var reader = new FileReader();
 
-        reader.onload = function(e) {
-            imageDisplay.src = e.target.result;
-        };
+            reader.onload = function(e) {
+                imageDisplay.src = e.target.result;
+            };
 
-        if (file) {
-            reader.readAsDataURL(file);
-        }
+            if (file) {
+                reader.readAsDataURL(file);
+            }
     }
     </script>
 </body>
