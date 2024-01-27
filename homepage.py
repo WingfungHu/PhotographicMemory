@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, app
+from flask import Flask, render_template, request, app, redirect, url_for, session
 from backend import Backend
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key' 
 global backend_object
 # global coutner
 # counter = 0
@@ -20,17 +21,18 @@ def start():
 
 @app.route("/upload_image", methods=['GET', 'POST'])
 def move_forward():
-    global backend_object
-    # global counter
-    # print(counter)
-    # counter += 1
-    input_url = request.form['input_image_url']
-    backend_object.upload_picture(input_url)
-    app.logger.debug(backend_object.print_current_state())
-    image_storage.append(input_url)
+    if request.method == 'POST':
+        input_url = request.form['input_image_url']
+        image_storage.append(input_url)
+        session['display_input'] = image_storage
+        return redirect(url_for('display'))
+    return render_template('homepage.html')
 
-    return render_template('homepage.html', display_input=', '.join(image_storage))
-    # if counter % 2 == 0:   
-    #     return render_template('homepage.html', display_input=text)
-    # else: 
-    #     return render_template('homepage.html', forward_message="forward_message", display_input=text)
+    # backend_object.upload_picture(input_url)
+    # app.logger.debug(backend_object.print_current_state())
+
+@app.route("/display")
+def display():
+    display_input = session.get('display_input', None)
+    session.pop('display_input', None)
+    return render_template('homepage.html', display_input=', '.join(display_input) if display_input else None)
