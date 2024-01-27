@@ -5,6 +5,7 @@ app = Flask(__name__)
 global backend_object
 # global coutner
 # counter = 0
+image_storage = []
 
 @app.route("/")
 def start():
@@ -26,8 +27,9 @@ def move_forward():
     input_url = request.form['input_image_url']
     backend_object.upload_picture(input_url)
     app.logger.debug(backend_object.print_current_state())
+    image_storage.append(input_url)
 
-    return render_template('homepage.html', display_input=input_url)
+    return render_template('homepage.html', display_input=', '.join(image_storage))
     # if counter % 2 == 0:   
     #     return render_template('homepage.html', display_input=text)
     # else: 
