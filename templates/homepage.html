@@ -16,10 +16,16 @@
             font-family: Arial, sans-serif;
         }
 
+        #container {
+            max-height: 80vh; /* Adjust as needed */
+            overflow-y: auto;
+        }
+
         #image-url-container,
         #image-display-container,
+        #gallery-container,
         #chat-container {
-            width: 300px;
+            width: 500px;
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 20px;
@@ -40,11 +46,19 @@
             margin-bottom: 10px;
         }
 
+        #image-display-container {
+            max-height: 300px; /* Adjust the maximum height as needed */
+            overflow: hidden; /* Hide overflow if the image exceeds the maximum height */
+            object-fit: contain;
+        }
+
         #image-display {
-            max-width: 150px;
-            max-height: 150px;
-            width: auto;
-            height: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto; 
+            width: 50%;
+            height: 50%;
+            
         }
 
         #submit-btn {
@@ -71,29 +85,57 @@
             padding-top: 10px;
             padding-bottom: 10px;
         }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start; /* Align items to the start */
+        }
+
+        .gallery-item {
+            width: 100px; /* Adjust the width as needed */
+            height: auto; /* Let the height adjust according to the image's aspect ratio */
+            margin: 5px;
+            overflow: hidden;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Adjust the object-fit as needed */
+        }
         
     </style>
 </head>
 <body>
-    <div id="image-url-container">
-        <label for="image-url" id="image-url-label">Image URL:</label>
-        <input type="text" id="image-url" name="image-url">
-    </div>
-    <button id="submit-btn" onclick="submitImage()">Submit</button>
-    <div id="horizontal-line"></div>
+    <div id="container">
+        <div id="image-url-container">
+            <label for="image-url" id="image-url-label">Image URL:</label>
+            <input type="text" id="image-url" name="image-url">
+        </div>
+        <button id="submit-btn" onclick="submitImage()">Submit</button>
+        <div id="horizontal-line"></div>
 
-    <div id="image-display-container">
-        <img id="image-display" src="" alt="Image from URL">
-    </div>
-    <div id="horizontal-line"></div>
+        <div id="image-display-container">
+            <img id="image-display" src="" alt="Image from URL">
+        </div>
 
-    <div id="chat-container">
-        <label for="user-input" id="memory-chat-label">MemoryChat:</label>
-        <input type="text" id="user-input" placeholder="Type a message..." onkeydown="handleChatInput(event)">
-        <div id="chat-messages"></div>
+        <div id="gallery-container">
+            <h3>Image Gallery</h3>
+            <div id="gallery" class="gallery"></div>
+        </div>
+        <div id="horizontal-line"></div>
+
+        <div id="chat-container">
+            <label for="user-input" id="memory-chat-label">MemoryChat:</label>
+            <input type="text" id="user-input" placeholder="Type a message..." onkeydown="handleChatInput(event)">
+            <div id="chat-messages"></div>
+        </div>
     </div>
 
     <script>
+        var imageUrls = [];
+
         function submitImage() {
             var imageUrl = document.getElementById('image-url').value;
             var imageDisplay = document.getElementById('image-display');
@@ -101,6 +143,13 @@
 
             // Display the image
             imageDisplay.src = imageUrl;
+
+            // Add the image URL to the array
+            imageUrls.push(imageUrl);
+
+            // Update the gallery
+            updateGallery();
+            
             $.ajax({ 
                 url: '/upload_image', 
                 type: 'POST', 
@@ -150,6 +199,21 @@
                 // Prevent the default behavior of the Enter key (e.g., adding a newline)
                 event.preventDefault();
             }
+        }
+
+        function updateGallery() {
+            var gallery = document.getElementById('gallery');
+            gallery.innerHTML = ''; // Clear the gallery
+
+            // Loop through image URLs and add them to the gallery
+            imageUrls.forEach(function(url) {
+                var galleryItem = document.createElement('div');
+                galleryItem.classList.add('gallery-item');
+                var img = document.createElement('img');
+                img.src = url;
+                galleryItem.appendChild(img);
+                gallery.appendChild(galleryItem);
+            });
         }
     </script>
 </body>
