@@ -1,7 +1,8 @@
 import datetime as dt
 
 import cohere_API
-import Image_API
+# TODO uncomment this:  Commenting it out now because its not a class or a function so whenever we start up the website it makes an API call
+# import Image_API
 
 class Pictures():
     def __init__(self, url, label=None):
@@ -10,7 +11,7 @@ class Pictures():
         # Make API Call Here and Store the tags caption information:
         self.tags = "PLACE_HOLDER_tag_picture_"+str(label)
         self.caption = "PLACE_HOLDER_caption_picture_"+str(label)
-        self.added_date = dt.datetime()
+        # self.added_date = dt.datetime()
 
     def get_url(self):
         return self.url
@@ -18,6 +19,14 @@ class Pictures():
         return self.tags
     def get_caption(self):
         return self.caption
+    def __str__(self) -> str:
+        str_return = ""
+        str_return += "URL: " + self.url + " \n"
+        str_return += "tags: " + self.tags + " \n"
+        str_return += "caption: " + self.caption + " \n"
+        # str_return += "added_date: " + self.added_date + " \n"
+        return str_return
+            
     
 
 class Backend():
@@ -31,6 +40,13 @@ class Backend():
         # I might need to initiate API calls here just to make sure they are working and functional
         
         return
+    
+    def print_current_state(self):
+        state = {
+            "pictures": self.pictures,
+            "history": self.chat_history
+        }
+        return state
     
     def get_all_pictures(self):
         return self.pictures
