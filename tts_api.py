@@ -6,7 +6,7 @@ import azure.cognitiveservices.speech as speechsdk
 # from pydub.playback import play
 # from pydub import AudioSegment
 import os
-from flask import Flask, request, send_file#NEW
+from flask import Flask, request, send_file, render_template
 from flask_cors import CORS
 
 app = Flask(__name__)#NEW
@@ -22,15 +22,18 @@ app = Flask(__name__)#NEW
 
 @app.route('/')
 def main_page():
-    return 
+    return render_template('tts_api.html')
 
 @app.route('/convert', methods=['POST'])#NEW
 def convert_to_speech():
+    print("Here")
     subscription_key = 'e370f7cc63b042f2a1dd21387391bc2d'
     service_region = 'https://eastus.api.cognitive.microsoft.com/'
     speech_config = speechsdk.SpeechConfig(subscription=subscription_key,region=service_region)
+    print("There")
 
     text = request.form['text']
+    print("TEXT TO CONVERT: ", text)
     # tts_service = tts_api()
     audio_file = speech_config.convert_to_speech(text)
 
