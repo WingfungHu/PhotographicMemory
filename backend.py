@@ -1,26 +1,28 @@
 import datetime as dt
 import sys
 
-import cohere_API
-from Image_API import get_image_decsription
+from cohere_api import Chatbot
+from Image_API import Image_API
 # TODO uncomment this:  Commenting it out now because its not a class or a function so whenever we start up the website it makes an API call
 # import Image_API
 
 class Pictures():
-    def __init__(self, url, label=None):
+    def __init__(self, url=None, tags=None, caption=None, label=None):
         self.url = url
-        # TODO
+        self.tags = tags
+        self.caption = caption
+        self.label = label
         # Make API Call Here and Store the tags caption information:
-        self.analysis = get_image_decsription(url=url)
-        if self.analysis:
-            self.tags = self.analysis["tags"]
-            self.caption = self.analysis["caption"]
-        else:
-            print("Picture API call returned nothing for url:", url, file=sys.stderr)
-            self.tags = "PLACE_HOLDER_tag_picture_"+str(label)
-            self.caption = "PLACE_HOLDER_caption_picture_"+str(label)
+        # self.analysis = get_image_decsription(url=url)
+        # if self.url:
+        #     self.tags = self.analysis["tags"]
+        #     self.caption = self.analysis["caption"]
+        # else:
+        #     print("Picture API call returned nothing for url:", url, file=sys.stderr)
+        #     self.tags = "PLACE_HOLDER_tag_picture_"+str(label)
+        #     self.caption = "PLACE_HOLDER_caption_picture_"+str(label)
 
-        return self
+        return
         # self.added_date = dt.datetime()
 
     def get_url(self):
@@ -48,7 +50,7 @@ class Backend():
     def __init__(self):
         # TODO
         # I might need to initiate API calls here just to make sure they are working and functional
-        
+        self.image_api = Image_API()
         return
     
     def print_current_state(self):
@@ -86,6 +88,14 @@ class Backend():
                 self.pictures.pop(idx_to_remove)
     
     def upload_picture(self, url):
+        
+        # Make API call to obtain tags and captions
+        description_dict = self.image_api.get_image_description(url)
+        print("Dictionary Dict: " )
+        print(description_dict)
+        tag = description_dict["tags"]
+        caption = description_dict["caption"]
+        tag = description_dict["tags"]
         # Creates a pictures object and stores it in pictures array
         created_picture = Pictures(url, label=len(self.pictures))
         self.pictures.append(created_picture)
